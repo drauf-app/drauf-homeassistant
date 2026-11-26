@@ -8,7 +8,7 @@
           "api_token": "API-Token"
         },
         "data_description": {
-          "url": "Zum Beispiel https://drauf.example.com",
+          "url": "Die Adresse deines drauf-Servers, z. B. drauf.example.com",
           "api_token": "Ein Token mit dem Scope plan:read (beginnt mit drauf_)"
         }
       },
