@@ -29,6 +29,51 @@
       "reauth_successful": "Erneute Anmeldung erfolgreich"
     }
   },
+  "selector": {
+    "start_day": {
+      "options": {
+        "mon": "Montag",
+        "tue": "Dienstag",
+        "wed": "Mittwoch",
+        "thu": "Donnerstag",
+        "fri": "Freitag",
+        "sat": "Samstag",
+        "sun": "Sonntag"
+      }
+    }
+  },
+  "services": {
+    "get_plan": {
+      "name": "Plan abrufen",
+      "description": "Liefert alle Planeinträge eines Zeitraums, gruppiert nach Datum, mit Label, Link, Bild und Koch.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Instanz",
+          "description": "Die abzufragende drauf-Instanz. Nur nötig, wenn mehrere eingerichtet sind."
+        },
+        "start_date": {
+          "name": "Startdatum",
+          "description": "Erster Tag des Zeitraums. Ohne Angabe beginnt der Zeitraum am letzten Starttag (oder heute)."
+        },
+        "end_date": {
+          "name": "Enddatum",
+          "description": "Letzter Tag des Zeitraums (einschließlich). Ohne Angabe ergibt sich das Ende aus der Anzahl der Tage."
+        },
+        "start_day": {
+          "name": "Starttag",
+          "description": "Wochentag, mit dem die Planwoche beginnt; der Zeitraum startet an dessen letztem Vorkommen. Eine Woche von Freitag bis Freitag ist Starttag Freitag mit 8 Tagen."
+        },
+        "week_offset": {
+          "name": "Wochenversatz",
+          "description": "Verschiebt den Zeitraum um ganze Wochen, z. B. 1 für nächste Woche."
+        },
+        "days": {
+          "name": "Tage",
+          "description": "Länge des Zeitraums in Tagen (Standard 7)."
+        }
+      }
+    }
+  },
   "entity": {
     "calendar": {
       "plan": {

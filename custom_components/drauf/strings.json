@@ -29,6 +29,51 @@
       "reauth_successful": "Re-authentication was successful"
     }
   },
+  "selector": {
+    "start_day": {
+      "options": {
+        "mon": "Monday",
+        "tue": "Tuesday",
+        "wed": "Wednesday",
+        "thu": "Thursday",
+        "fri": "Friday",
+        "sat": "Saturday",
+        "sun": "Sunday"
+      }
+    }
+  },
+  "services": {
+    "get_plan": {
+      "name": "Get plan",
+      "description": "Returns all plan entries in a date range, grouped by date, with slot, link, image, and cook.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Instance",
+          "description": "The drauf instance to query. Only needed when several are set up."
+        },
+        "start_date": {
+          "name": "Start date",
+          "description": "First day of the range. When omitted, the range starts at the most recent start day (or today)."
+        },
+        "end_date": {
+          "name": "End date",
+          "description": "Last day of the range (inclusive). When omitted, the range covers the number of days."
+        },
+        "start_day": {
+          "name": "Start day",
+          "description": "Weekday the plan week starts with; the range starts at its most recent occurrence. A Friday-to-Friday week is start day Friday with 8 days."
+        },
+        "week_offset": {
+          "name": "Week offset",
+          "description": "Shift the range by whole weeks, e.g. 1 for next week."
+        },
+        "days": {
+          "name": "Days",
+          "description": "Length of the range in days (default 7)."
+        }
+      }
+    }
+  },
   "entity": {
     "calendar": {
       "plan": {

@@ -1,0 +1,43 @@
+get_plan:
+  fields:
+    config_entry_id:
+      required: false
+      selector:
+        config_entry:
+          integration: drauf
+    start_date:
+      required: false
+      selector:
+        date:
+    end_date:
+      required: false
+      selector:
+        date:
+    start_day:
+      required: false
+      selector:
+        select:
+          options:
+            - "mon"
+            - "tue"
+            - "wed"
+            - "thu"
+            - "fri"
+            - "sat"
+            - "sun"
+          translation_key: start_day
+    week_offset:
+      required: false
+      default: 0
+      selector:
+        number:
+          min: -13
+          max: 13
+          mode: box
+    days:
+      required: false
+      selector:
+        number:
+          min: 1
+          max: 93
+          mode: box

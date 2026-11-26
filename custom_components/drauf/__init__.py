@@ -6,13 +6,24 @@ from homeassistant.const import CONF_API_TOKEN, CONF_URL, Platform
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryAuthFailed, ConfigEntryNotReady
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
+import homeassistant.helpers.config_validation as cv
 import homeassistant.helpers.device_registry as dr
+from homeassistant.helpers.typing import ConfigType
 
 from .api import DraufApiClient, DraufAuthError, DraufConnectionError, DraufError
 from .const import DOMAIN
 from .coordinator import DraufConfigEntry, DraufCoordinator
+from .services import async_setup_services
 
 PLATFORMS = [Platform.CALENDAR, Platform.SENSOR]
+
+CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
+
+
+async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
+    """Register the drauf actions."""
+    async_setup_services(hass)
+    return True
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: DraufConfigEntry) -> bool:
