@@ -104,9 +104,11 @@ class DraufConfigFlow(ConfigFlow, domain=DOMAIN):
         """Validate credentials, mapping failures to form error keys."""
         try:
             await validate_input(self.hass, url, token)
-        except DraufAuthError:
+        except DraufAuthError as err:
+            _LOGGER.debug("Token rejected by %s: %s", url, err)
             return {"base": "invalid_auth"}
-        except DraufConnectionError:
+        except DraufConnectionError as err:
+            _LOGGER.debug("Cannot connect to %s: %s", url, err)
             return {"base": "cannot_connect"}
         except DraufError:
             _LOGGER.exception("Unexpected error validating drauf credentials")
