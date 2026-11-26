@@ -25,11 +25,24 @@ async def async_setup_entry(
 
 
 def _event_for(entry: PlanEntry) -> CalendarEvent:
-    """Map a plan entry to an all-day calendar event."""
+    """Map a plan entry to an all-day calendar event.
+
+    The slot also goes into the description (#5): calendar.get_events only
+    returns the summary/description, so this keeps the label available to
+    cards and scripts that consume events.
+    """
     summary = entry.title
     if entry.slot_name:
         summary = f"{entry.slot_name}: {summary}" if summary else entry.slot_name
-    description_parts = [part for part in (entry.link, entry.cook_id and f"Cook: {entry.cook_id}") if part]
+    description_parts = [
+        part
+        for part in (
+            entry.slot_name,
+            entry.link,
+            entry.cook_id and f"Cook: {entry.cook_id}",
+        )
+        if part
+    ]
     return CalendarEvent(
         summary=summary,
         start=entry.date,

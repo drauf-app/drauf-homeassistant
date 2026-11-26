@@ -33,6 +33,40 @@ Copy `custom_components/drauf` into your Home Assistant `config/custom_component
 
 Setup validates both: the URL must answer `GET /api/version`, and the token must be able to read the plan. If the token is later revoked, Home Assistant prompts for re-authentication.
 
+## Action: `drauf.get_plan`
+
+For wall displays and scripts that need more than the calendar's summaries: returns every entry in a date range, grouped by date, with slot (name, id, order), link, image, and cook. Either pass an explicit `start_date`/`end_date`, or let it compute the range: `start_day` + `days` + `week_offset` reproduce the web app's week logic — a Friday-to-Friday week is:
+
+```yaml
+action: drauf.get_plan
+data:
+  start_day: fri
+  days: 8
+  week_offset: 0   # 1 = next week
+response_variable: plan
+```
+
+Response shape:
+
+```yaml
+start: "2026-11-27"
+end: "2026-12-04"
+days:
+  - date: "2026-11-27"
+    entries:
+      - id: "…"
+        title: Pizza
+        text: Pizza
+        slot: Abendessen
+        slot_id: "…"
+        slot_order: 10
+        cook: { id: "…", display_name: null }
+        link: null
+        image_url: null
+```
+
+Days without entries are included with an empty `entries` list. `cook.display_name` stays `null` until the server exposes names to `plan:read` tokens ([drauf#105](https://github.com/drauf-app/drauf/issues/105)). The range may span at most 92 days (server limit).
+
 ## Example: announce today's dinner
 
 ```yaml

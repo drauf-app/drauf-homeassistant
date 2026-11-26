@@ -1,4 +1,9 @@
 {
+  "services": {
+    "get_plan": {
+      "service": "mdi:calendar-search"
+    }
+  },
   "entity": {
     "sensor": {
       "today": {

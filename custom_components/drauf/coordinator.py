@@ -41,16 +41,62 @@ class PlanEntry:
         return self.text or self.link or ""
 
 
+@dataclass(frozen=True)
+class MealSlot:
+    """A meal label (Frühstück, Abendessen, …)."""
+
+    id: str
+    name: str
+    sort_order: int
+
+
 @dataclass
 class DraufData:
     """Snapshot of the plan window around today."""
 
     entries: list[PlanEntry] = field(default_factory=list)
-    slot_names: dict[str, str] = field(default_factory=dict)
+    slots: dict[str, MealSlot] = field(default_factory=dict)
 
     def entries_on(self, day: date) -> list[PlanEntry]:
         """The day's entries, in slot order."""
         return [entry for entry in self.entries if entry.date == day]
+
+
+def parse_slots(raw_slots: list[dict]) -> dict[str, MealSlot]:
+    """Map raw /api/plan/slots rows by id."""
+    return {
+        raw["id"]: MealSlot(
+            id=raw["id"], name=raw["name"], sort_order=raw.get("sortOrder", 0)
+        )
+        for raw in raw_slots
+    }
+
+
+def parse_entries(raw_entries: list[dict], slots: dict[str, MealSlot]) -> list[PlanEntry]:
+    """Map raw /api/plan/entries rows, resolving slots; sorted by date and slot order."""
+    entries: list[PlanEntry] = []
+    for raw in raw_entries:
+        slot_id = raw.get("slotId")
+        slot = slots.get(slot_id) if slot_id else None
+        try:
+            entry_date = date.fromisoformat(raw["date"])
+        except (KeyError, ValueError):
+            continue
+        entries.append(
+            PlanEntry(
+                id=raw["id"],
+                date=entry_date,
+                slot_id=slot_id,
+                slot_name=slot.name if slot else None,
+                slot_order=slot.sort_order if slot else _NO_SLOT_ORDER,
+                text=raw.get("text"),
+                link=raw.get("link"),
+                image_url=raw.get("imageUrl"),
+                cook_id=raw.get("cookId"),
+            )
+        )
+    entries.sort(key=lambda entry: (entry.date, entry.slot_order, entry.id))
+    return entries
 
 
 type DraufConfigEntry = ConfigEntry[DraufCoordinator]
@@ -78,40 +124,12 @@ class DraufCoordinator(DataUpdateCoordinator[DraufData]):
         start = today - timedelta(days=PAST_DAYS)
         end = today + timedelta(days=FUTURE_DAYS)
         try:
-            slots = await self.client.async_get_slots()
+            raw_slots = await self.client.async_get_slots()
             raw_entries = await self.client.async_get_entries(start, end)
         except DraufAuthError as err:
             raise ConfigEntryAuthFailed("API token was rejected") from err
         except DraufError as err:
             raise UpdateFailed(f"Error talking to drauf: {err}") from err
 
-        slot_names: dict[str, str] = {}
-        slot_orders: dict[str, int] = {}
-        for slot in slots:
-            slot_names[slot["id"]] = slot["name"]
-            slot_orders[slot["id"]] = slot.get("sortOrder", 0)
-
-        entries: list[PlanEntry] = []
-        for raw in raw_entries:
-            slot_id = raw.get("slotId")
-            try:
-                entry_date = date.fromisoformat(raw["date"])
-            except (KeyError, ValueError):
-                continue
-            entries.append(
-                PlanEntry(
-                    id=raw["id"],
-                    date=entry_date,
-                    slot_id=slot_id,
-                    slot_name=slot_names.get(slot_id) if slot_id else None,
-                    slot_order=slot_orders.get(slot_id, _NO_SLOT_ORDER)
-                    if slot_id
-                    else _NO_SLOT_ORDER,
-                    text=raw.get("text"),
-                    link=raw.get("link"),
-                    image_url=raw.get("imageUrl"),
-                    cook_id=raw.get("cookId"),
-                )
-            )
-        entries.sort(key=lambda entry: (entry.date, entry.slot_order, entry.id))
-        return DraufData(entries=entries, slot_names=slot_names)
+        slots = parse_slots(raw_slots)
+        return DraufData(entries=parse_entries(raw_entries, slots), slots=slots)
