@@ -1,0 +1,47 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "description": "Connect to your drauf instance. Create an API token with the plan:read scope in drauf under Settings → API tokens.",
+        "data": {
+          "url": "Instance URL",
+          "api_token": "API token"
+        },
+        "data_description": {
+          "url": "The address of your drauf server, for example drauf.example.com",
+          "api_token": "A token with the plan:read scope (starts with drauf_)"
+        }
+      },
+      "reauth_confirm": {
+        "description": "The API token for {url} was rejected. Enter a new token with the plan:read scope.",
+        "data": {
+          "api_token": "API token"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Failed to connect — check the instance URL",
+      "invalid_auth": "The token was rejected — check it has the plan:read scope",
+      "unknown": "Unexpected error"
+    },
+    "abort": {
+      "already_configured": "This drauf instance is already configured",
+      "reauth_successful": "Re-authentication was successful"
+    }
+  },
+  "entity": {
+    "calendar": {
+      "plan": {
+        "name": "Wochenplan"
+      }
+    },
+    "sensor": {
+      "today": {
+        "name": "Today"
+      },
+      "tomorrow": {
+        "name": "Tomorrow"
+      }
+    }
+  }
+}
