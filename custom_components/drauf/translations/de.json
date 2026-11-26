@@ -1,0 +1,47 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "description": "Verbinde dich mit deiner drauf-Instanz. Erstelle in drauf unter Einstellungen → API-Tokens einen Token mit dem Scope plan:read.",
+        "data": {
+          "url": "Instanz-URL",
+          "api_token": "API-Token"
+        },
+        "data_description": {
+          "url": "Zum Beispiel https://drauf.example.com",
+          "api_token": "Ein Token mit dem Scope plan:read (beginnt mit drauf_)"
+        }
+      },
+      "reauth_confirm": {
+        "description": "Der API-Token für {url} wurde abgelehnt. Gib einen neuen Token mit dem Scope plan:read ein.",
+        "data": {
+          "api_token": "API-Token"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Verbindung fehlgeschlagen — prüfe die Instanz-URL",
+      "invalid_auth": "Der Token wurde abgelehnt — prüfe, ob er den Scope plan:read hat",
+      "unknown": "Unerwarteter Fehler"
+    },
+    "abort": {
+      "already_configured": "Diese drauf-Instanz ist bereits eingerichtet",
+      "reauth_successful": "Erneute Anmeldung erfolgreich"
+    }
+  },
+  "entity": {
+    "calendar": {
+      "plan": {
+        "name": "Wochenplan"
+      }
+    },
+    "sensor": {
+      "today": {
+        "name": "Heute"
+      },
+      "tomorrow": {
+        "name": "Morgen"
+      }
+    }
+  }
+}

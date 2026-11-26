@@ -1,0 +1,12 @@
+{
+  "entity": {
+    "sensor": {
+      "today": {
+        "default": "mdi:silverware-fork-knife"
+      },
+      "tomorrow": {
+        "default": "mdi:silverware-clean"
+      }
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "domain": "drauf",
+  "name": "drauf",
+  "codeowners": ["@c-baumgartner"],
+  "config_flow": true,
+  "documentation": "https://github.com/drauf-app/drauf-homeassistant",
+  "integration_type": "service",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/drauf-app/drauf-homeassistant/issues",
+  "requirements": [],
+  "version": "0.1.0"
+}
